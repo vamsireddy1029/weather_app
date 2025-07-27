@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weather Dashboard</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1><i class="fas fa-cloud-sun"></i> Weather Dashboard</h1>
+            <div class="search-container">
+                <input type="text" id="cityInput" placeholder="Enter city name...">
+                <button id="searchBtn"><i class="fas fa-search"></i></button>
+                <button id="locationBtn"><i class="fas fa-location-arrow"></i></button>
+            </div>
+        </header>
+
+        <div class="loading" id="loading">
+            <div class="spinner"></div>
+            <p>Loading weather data...</p>
+        </div>
+
+        <main id="weatherContent" class="hidden">
+            <div class="current-weather">
+                <div class="weather-info">
+                    <h2 id="cityName">Delhi, IN</h2>
+                    <p id="currentDate"></p>
+                    <div class="temperature">
+                        <span id="currentTemp">25°C</span>
+                        <div class="weather-icon">
+                            <i id="weatherIcon" class="fas fa-sun"></i>
+                        </div>
+                    </div>
+                    <p id="weatherDescription">Clear Sky</p>
+                </div>
+                <div class="weather-details">
+                    <div class="detail-item">
+                        <i class="fas fa-eye"></i>
+                        <span>Visibility</span>
+                        <span id="visibility">10 km</span>
+                    </div>
+                    <div class="detail-item">
+                        <i class="fas fa-tint"></i>
+                        <span>Humidity</span>
+                        <span id="humidity">65%</span>
+                    </div>
+                    <div class="detail-item">
+                        <i class="fas fa-wind"></i>
+                        <span>Wind</span>
+                        <span id="windSpeed">15 km/h</span>
+                    </div>
+                    <div class="detail-item">
+                        <i class="fas fa-thermometer-half"></i>
+                        <span>Feels like</span>
+                        <span id="feelsLike">28°C</span>
+                    </div>
+                    <div class="detail-item">
+                        <i class="fas fa-compress-arrows-alt"></i>
+                        <span>Pressure</span>
+                        <span id="pressure">1013 hPa</span>
+                    </div>
+                    <div class="detail-item">
+                        <i class="fas fa-sun"></i>
+                        <span>UV Index</span>
+                        <span id="uvIndex">5</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="forecast-section">
+                <h3>5-Day Forecast</h3>
+                <div class="forecast-container" id="forecastContainer">
+                </div>
+            </div>
+
+            <div class="charts-section">
+                <div class="chart-info">
+                    <div class="chart-stat">
+                        <span class="stat-label">Highest:</span>
+                        <span id="maxTemp" class="stat-value">--°C</span>
+                    </div>
+                    <div class="chart-stat">
+                        <span class="stat-label">Lowest:</span>
+                        <span id="minTemp" class="stat-value">--°C</span>
+                    </div>
+                    <div class="chart-stat">
+                        <span class="stat-label">Average:</span>
+                        <span id="avgTemp" class="stat-value">--°C</span>
+                    </div>
+                    <div class="chart-stat">
+                        <span class="stat-label">Trend:</span>
+                        <span id="tempTrend" class="stat-value">--</span>
+                    </div>
+                </div>
+                <div class="trend-analysis">
+                    <h4>Temperature Analysis</h4>
+                    <div class="analysis-grid">
+                        <div class="analysis-item">
+                            <i class="fas fa-arrow-up"></i>
+                            <span class="analysis-label">Peak Time:</span>
+                            <span id="peakTime">--</span>
+                        </div>
+                        <div class="analysis-item">
+                            <i class="fas fa-arrow-down"></i>
+                            <span class="analysis-label">Coolest Time:</span>
+                            <span id="coolestTime">--</span>
+                        </div>
+                        <div class="analysis-item">
+                            <i class="fas fa-chart-line"></i>
+                            <span class="analysis-label">Variation:</span>
+                            <span id="tempVariation">--°C</span>
+                        </div>
+                        <div class="analysis-item">
+                            <i class="fas fa-clock"></i>
+                            <span class="analysis-label">Last Updated:</span>
+                            <span id="lastUpdated">--</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <div class="error-message hidden" id="errorMessage">
+            <i class="fas fa-exclamation-triangle"></i>
+            <p>City not found. Please try another location.</p>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
