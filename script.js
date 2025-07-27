@@ -1,6 +1,6 @@
 class WeatherDashboard {
     constructor() {
-        this.OPENWEATHER_API_KEY = 'b1b15e88fa797225412429c1c50c122a1'; // Replace with your key
+        this.OPENWEATHER_API_KEY = 'b1b15e88fa797225412429c1c50c122a1'; 
         this.BASE_URL = 'https://api.openweathermap.org/data/2.5';
         
         this.currentCity = 'Delhi';
@@ -144,7 +144,7 @@ class WeatherDashboard {
             this.hideLoading();
             this.updateCurrentWeather(currentWeather);
             this.updateForecast(forecastData);
-            this.updateStats(forecastData);
+            this.updateStats(forecastData, currentWeather);
             this.updateLastUpdated();
             this.showWeatherContent();
 
@@ -188,7 +188,7 @@ class WeatherDashboard {
         document.getElementById('visibility').textContent = `${(data.visibility / 1000).toFixed(1)} km`;
         document.getElementById('pressure').textContent = `${data.main.pressure} hPa`;
         document.getElementById('feelsLike').textContent = `${Math.round(data.main.feels_like)}°C`;
-        
+    
         const hour = new Date().getHours();
         let uvIndex = 0;
         if (hour >= 10 && hour <= 16) {
@@ -217,7 +217,6 @@ class WeatherDashboard {
     updateForecast(data) {
         const container = document.getElementById('forecastContainer');
         container.innerHTML = '';
-
         const dailyForecasts = {};
         
         data.list.forEach(item => {
@@ -273,14 +272,17 @@ class WeatherDashboard {
         });
     }
 
-    updateStats(data) {
-        const temps = data.list.slice(0, 16).map(item => item.main.temp);
-        const maxTemp = Math.max(...temps);
-        const minTemp = Math.min(...temps);
-        const avgTemp = temps.reduce((a, b) => a + b, 0) / temps.length;
-  
-        const firstHalf = temps.slice(0, Math.floor(temps.length / 2));
-        const secondHalf = temps.slice(Math.floor(temps.length / 2));
+    updateStats(data, currentWeather) {
+        const forecastTemps = data.list.slice(0, 16).map(item => item.main.temp);
+        const currentTemp = currentWeather.main.temp;
+        const allTemps = [currentTemp, ...forecastTemps];
+        
+        const maxTemp = Math.max(...allTemps);
+        const minTemp = Math.min(...allTemps);
+        const avgTemp = allTemps.reduce((a, b) => a + b, 0) / allTemps.length;
+        
+        const firstHalf = forecastTemps.slice(0, Math.floor(forecastTemps.length / 2));
+        const secondHalf = forecastTemps.slice(Math.floor(forecastTemps.length / 2));
         const firstAvg = firstHalf.reduce((a, b) => a + b, 0) / firstHalf.length;
         const secondAvg = secondHalf.reduce((a, b) => a + b, 0) / secondHalf.length;
         const trend = secondAvg > firstAvg ? '↗ Rising' : secondAvg < firstAvg ? '↘ Falling' : '→ Stable';
@@ -290,13 +292,25 @@ class WeatherDashboard {
         document.getElementById('avgTemp').textContent = `${Math.round(avgTemp)}°C`;
         document.getElementById('tempTrend').textContent = trend;
 
-        const tempData = data.list.slice(0, 16).map(item => ({
-            temp: item.main.temp,
-            time: new Date(item.dt * 1000).toLocaleTimeString('en-US', { 
-                hour: '2-digit',
-                minute: '2-digit'
-            })
-        }));
+        const now = new Date();
+        const tempData = [
+            {
+                temp: currentTemp,
+                time: now.toLocaleTimeString('en-US', { 
+                    hour: '2-digit',
+                    minute: '2-digit'
+                }),
+                date: now
+            },
+            ...data.list.slice(0, 16).map(item => ({
+                temp: item.main.temp,
+                time: new Date(item.dt * 1000).toLocaleTimeString('en-US', { 
+                    hour: '2-digit',
+                    minute: '2-digit'
+                }),
+                date: new Date(item.dt * 1000)
+            }))
+        ];
         
         const maxTempPoint = tempData.reduce((max, current) => 
             current.temp > max.temp ? current : max
